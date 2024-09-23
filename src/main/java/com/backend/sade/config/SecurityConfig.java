@@ -33,21 +33,21 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // CSRF korumasını devre dışı bırakıyoruz çünkü JWT ile korunuyoruz.
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/auth/**").permitAll() // Giriş ve kayıt endpoint'leri herkese açık.
-                        .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll() // Swagger erişimi herkese açık.
-                        .anyRequest().authenticated() // Diğer tüm endpoint'ler kimlik doğrulaması gerektirir.
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // OPTIONS isteğine izin ver
+                        .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/public/docs/**").permitAll()  // Swagger UI ve statik kaynaklar izinli
+                        .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Oturumları stateful yapma, JWT token ile kontrol ediliyor.
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 );
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
-
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -63,7 +63,7 @@ public class SecurityConfig {
     public CorsFilter corsFilter() { // CORS Filter tanımı
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
+        config.setAllowCredentials(true); // Tarayıcıdan gelen çerezleri kabul eder
         config.addAllowedOriginPattern("*"); // Tüm origin'lere izin verir (geliştirme aşamasında)
         config.addAllowedHeader("*"); // Tüm header'lara izin verir
         config.addAllowedMethod("*"); // Tüm HTTP metodlarına izin verir
