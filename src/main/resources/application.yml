@@ -1,0 +1,67 @@
+# Genel Uygulama Ayarları
+spring:
+  profiles:
+    active: dev # Varsayılan olarak dev profili aktif hale gelir.
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10 # HikariCP bağlantı havuzunun maksimum boyutu.
+      minimum-idle: 5 # Minimum boşta bekletilecek bağlantı sayısı.
+      idle-timeout: 60000 # Boşta kalan bağlantının kapatılmadan önceki bekleme süresi (ms).
+      pool-name: HikariCP # HikariCP bağlantı havuzunun adı.
+      max-lifetime: 1800000 # Bağlantıların maksimum yaşam süresi (ms).
+      connection-timeout: 30000 # Bağlantı zaman aşımı süresi (ms).
+
+  jpa:
+    hibernate:
+      ddl-auto: update # Veri tabanı tablolarını otomatik olarak günceller. Dikkatli kullanılmalı.
+    show-sql: true # SQL sorgularını konsolda gösterir.
+    format-sql: true # SQL sorgularını okunabilir hale getirir.
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect # PostgreSQL'e uygun dialect kullanılır.
+        format_sql: true
+        jdbc:
+          lob:
+            non_contextual_creation: true # LOB desteklemesi için gerekli ayar.
+
+# Log Seviyelerini Ayarlama
+logging:
+  level:
+    org.springframework: INFO # Spring Framework log seviyesini INFO olarak ayarlar.
+    hibernate: INFO # Hibernate log seviyesini INFO olarak ayarlar.
+    com.backend.sade: DEBUG # Projeye özel log seviyesini DEBUG olarak ayarlar.
+
+# JWT Güvenlik Ayarları
+app:
+  jwt:
+    jwtSecret: "${JWT_SECRET:x2X7k2JH1p8L9mNc4R7t6Y8p1Q0r9U3y5T4v6W8y2A5b7F6h4S8j2N1r3K6z4E9t}" # JWT şifreleme anahtarı.
+    jwtExpirationMs: "${JWT_EXPIRATION_MS:86400000}" # JWT token'in geçerlilik süresi (ms).
+
+# Sunucu Ayarları
+server:
+  port: 8080 # Uygulamanın çalışacağı port.
+
+# Hata Mesajlarını Özelleştirme
+error:
+  whitelabel:
+    enabled: false # Spring'in varsayılan hata sayfasını devre dışı bırakır.
+  include-message: always # Hata mesajlarını yanıt içinde gösterir.
+  include-stacktrace: never # Stacktrace'i yanıt içinde göstermez.
+
+# Springdoc - Swagger API Dökümantasyonu Ayarları
+springdoc:
+  api-docs:
+    enabled: true  # API dokümantasyonu etkinleştirilir.
+    path: /public/docs
+  swagger-ui:
+    path: /public/docs/ui
+    display-request-duration: true # İstek süresini gösterir.
+    operationsSorter: alpha # Operasyonları alfabetik sıraya göre düzenler.
+    tagsSorter: alpha # Tagleri alfabetik sıraya göre düzenler.
+    tryItOutEnabled: true # Try it out butonunu aktif hale getirir.
+
+# CORS Ayarları
+cors:
+  allowedOrigins: "http://localhost:3000,http://localhost:3300" # İzin verilen origin adresleri.

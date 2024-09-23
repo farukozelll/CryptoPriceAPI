@@ -1,0 +1,74 @@
+# Geliştirme Ortamı İçin Ayarlar
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5435/sade_dev # Geliştirme ortamı veritabanı URL'si.
+    username: ${DB_USERNAME:postgres} # Veritabanı kullanıcı adı. Çevresel değişken yoksa "postgres" kullanır.
+    password: ${DB_PASSWORD:p.postgres} # Veritabanı şifresi. Çevresel değişken yoksa "p.postgres" kullanır.
+
+  jpa:
+    hibernate:
+      ddl-auto: update # Geliştirme ortamı için tablo yapısı güncellenir.
+    show-sql: true # SQL sorgularını konsolda gösterir.
+    format-sql: true # SQL sorgularını okunabilir hale getirir.
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect # PostgreSQL'e uygun dialect kullanılır.
+        format_sql: true
+        jdbc:
+          lob:
+            non_contextual_creation: true # LOB desteklemesi için gerekli ayar.
+
+# Swagger API Dökümantasyonu İçin Ayarlar
+springdoc:
+  api-docs:
+    enabled: true # API dokümantasyonu etkinleştirilir.
+    path: /public/docs
+  swagger-ui:
+    path: /public/docs/ui
+    display-request-duration: true # İstek süresini gösterir.
+    operationsSorter: alpha # Operasyonları alfabetik sıraya göre düzenler.
+    tagsSorter: alpha # Tagleri alfabetik sıraya göre düzenler.
+    tryItOutEnabled: true # Try it out butonunu aktif hale getirir.
+
+# Geliştirme Ortamı İçin Log Seviyeleri
+logging:
+  level:
+    root: INFO # Genel log seviyesini INFO olarak ayarlar.
+    org:
+      springframework: INFO # Spring Framework log seviyesini INFO olarak ayarlar.
+    com.backend.sade: INFO # Projeye özel log seviyesini DEBUG yapar.
+
+# Hata Mesajlarını Özelleştirme
+error:
+  whitelabel:
+    enabled: true # Varsayılan Spring hata sayfası gösterilir.
+  include-message: always # Hata mesajlarını yanıt içinde gösterir.
+  include-stacktrace: never # Stacktrace'i yanıt içinde göstermez.
+
+# JWT Güvenlik Ayarları
+app:
+  jwt:
+    jwtSecret: "${JWT_SECRET:x2X7k2JH1p8L9mNc4R7t6Y8p1Q0r9U3y5T4v6W8y2A5b7F6h4S8j2N1r3K6z4E9t}" # JWT şifreleme anahtarı.
+    jwtExpirationMs: "${JWT_EXPIRATION_MS:86400000}" # JWT token geçerlilik süresi (ms).
+
+# CORS Ayarları - Geliştirme ortamı için izin verilen origin adresleri
+cors:
+  allowedOrigins: "http://localhost:3000,http://localhost:3300"
+
+# Fixer API - Döviz kuru verileri için API URL ve anahtar bilgileri
+fixer:
+  api:
+    url: http://data.fixer.io/api/latest # Fixer API URL.
+    key: d4f5e93f97e071a989abeab9b17bca14 # API erişim anahtarı.
+
+# Binance API - Kripto para verileri için API URL ve sembol bilgileri
+binance:
+  api:
+    url: https://api.binance.com # Binance API URL.
+    symbols: # Çekilecek kripto para sembolleri.
+      - BNBBTC
+      - ETHBTC
+      - XRPBTC
+      - BCHBTC
+      - LTCBTC
+      - BTCUSDT
